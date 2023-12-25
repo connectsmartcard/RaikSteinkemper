@@ -28,18 +28,17 @@ body {
 
 .card {
   position: relative;
-  max-width: 300px;
-  width: 100%;
-  padding: 15px;
-  border-radius: 8px;
-  background-color: inherit;
+  max-width: 300px; /* Maximale Breite festlegen */
+  width: 100%; /* Breite auf die Breite des Elternelements setzen */
+  padding: 15px; /* Innenabstand */
+  border-radius: 8px; /* Abgerundete Ecken */
+  background-color: inherit; /* Hintergrundfarbe vom Elternelement erben */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* Entfernen der nowrap Eigenschaft, um Textumbruch zu ermöglichen */
+  /* Entfernen der hidden und ellipsis Eigenschaften, um Überlauf sichtbar zu machen */
 }
 
 .card:hover {
