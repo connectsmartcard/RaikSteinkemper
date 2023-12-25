@@ -36,7 +36,7 @@ const downloadButton = document.getElementById('download-pdf');
   });
 }
 
-  } 
+  
 
 
   // Funktion, um den Dark Mode zu aktivieren
