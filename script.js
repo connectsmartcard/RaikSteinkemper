@@ -19,7 +19,7 @@ if (downloadButton) {
       // ...weitere Optionen...
     }).then(canvas => {
       // Erstellen Sie das PDF mit den Maßen des Canvas
-      const pdf = new jsPDF({
+      const pdf = new jspdf.jsPDF({
         orientation: 'p', // 'p' für Portrait, 'l' für Landscape
         unit: 'px',
         format: [width, height],
