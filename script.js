@@ -5,46 +5,37 @@ document.addEventListener('DOMContentLoaded', (event) => {
   // Überprüfen, ob das Element existiert, bevor der Event Listener hinzugefügt wird
 const downloadButton = document.getElementById('download-pdf');
   if (downloadButton) {
-    downloadButton.addEventListener('click', function() {
+  downloadButton.addEventListener('click', function() {
+    // Bestimmen Sie die Skalierung basierend auf der Geräteauflösung
+    const scale = window.devicePixelRatio;
+    const cardElement = document.querySelector('.card');
+    const canvasWidth = cardElement.offsetWidth * scale;
+    const canvasHeight = cardElement.offsetHeight * scale;
 
-      html2canvas(document.querySelector('.card'), { 
-        scale: 2, // Anpassung der Skalierung für bessere Qualität, damals 2
-        useCORS: true
-      }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png', 1.0);
-        const pdf = new jspdf.jsPDF({
+    html2canvas(cardElement, {
+      scale: scale, // Anpassung der Skalierung für bessere Qualität
+      useCORS: true, // Ermöglicht das Laden von Bildern mit CORS-Policy
+      width: canvasWidth,
+      height: canvasHeight
+    }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdfWidth = canvas.width / scale; // Breite im PDF anpassen
+      const pdfHeight = canvas.height / scale; // Höhe im PDF anpassen
 
-           orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
-           unit: 'mm',
-           format: 'a6'
-
-          // orientation: 'landscape',
-          // unit: 'px',
-          // format: [canvas.width / scale, canvas.height / scale]
-        });
-  
-        // Berechnen Sie das Seitenverhältnis des Bildes
-        const canvasAspectRatio = canvas.width / canvas.height;
-        const a4AspectRatio = pdf.internal.pageSize.getWidth() / pdf.internal.pageSize.getHeight();
-        let imgWidth = pdf.internal.pageSize.getWidth();
-        let imgHeight = pdf.internal.pageSize.getHeight();
-        
-        // Anpassung der Bildgröße, um Verzerrung zu vermeiden
-        if (canvasAspectRatio > a4AspectRatio) {
-          // Canvas ist breiter als A4
-          imgHeight = imgWidth / canvasAspectRatio;
-        } else {
-          // Canvas ist höher als A4
-          imgWidth = imgHeight * canvasAspectRatio;
-        }
-  
-        const x = (pdf.internal.pageSize.getWidth() - imgWidth) / 2;
-        const y = (pdf.internal.pageSize.getHeight() - imgHeight) / 2;
-  
-        pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-        pdf.save('visitenkarte.pdf');
+      // Erzeugen Sie ein PDF im passenden Format zur Visitenkarte
+      const pdf = new jspdf.jsPDF({
+        orientation: pdfWidth > pdfHeight ? 'landscape' : 'portrait',
+        unit: 'px',
+        format: [pdfWidth, pdfHeight]
       });
+
+      // Bild ohne Skalierung hinzufügen, da wir die Größe bereits angepasst haben
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('visitenkarte.pdf');
     });
+  });
+}
+
   } 
 
 
